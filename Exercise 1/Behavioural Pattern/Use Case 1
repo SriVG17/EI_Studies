@@ -1,0 +1,94 @@
+using System;
+using System.Collections.Generic;
+
+// Subject
+public class Stock
+{
+    private string symbol;
+    private float price;
+    private List<IInvestor> investors = new List<IInvestor>();
+
+    public Stock(string symbol, float price)
+    {
+        this.symbol = symbol;
+        this.price = price;
+    }
+
+    public void Attach(IInvestor investor)
+    {
+        investors.Add(investor);
+    }
+
+    public void Detach(IInvestor investor)
+    {
+        investors.Remove(investor);
+    }
+
+    public void Notify()
+    {
+        foreach (IInvestor investor in investors)
+        {
+            investor.Update(this);
+        }
+    }
+
+    public float Price
+    {
+        get { return price; }
+        set
+        {
+            if (price != value)
+            {
+                price = value;
+                Notify();
+            }
+        }
+    }
+
+    public string Symbol
+    {
+        get { return symbol; }
+    }
+}
+
+// Observer
+public interface IInvestor
+{
+    void Update(Stock stock);
+}
+
+// ConcreteObserver
+public class Investor : IInvestor
+{
+    private string name;
+
+    public Investor(string name)
+    {
+        this.name = name;
+    }
+
+    public void Update(Stock stock)
+    {
+        Console.WriteLine($"Notified {name} of {stock.Symbol}'s change to {stock.Price}");
+    }
+}
+
+// Client
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        // Create stock and investors
+        Stock apple = new Stock("AAPL", 120.00f);
+        Investor investor1 = new Investor("Investor 1");
+        Investor investor2 = new Investor("Investor 2");
+
+        // Attach investors to the stock
+        apple.Attach(investor1);
+        apple.Attach(investor2);
+
+        // Change price and notify investors
+        apple.Price = 120.10f;
+        apple.Price = 121.00f;
+    }
+}
