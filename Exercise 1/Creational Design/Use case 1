@@ -1,0 +1,69 @@
+using System;
+
+// Product
+public interface IVehicle
+{
+    void Drive();
+}
+
+// ConcreteProductA
+public class Car : IVehicle
+{
+    public void Drive()
+    {
+        Console.WriteLine("Driving a car.");
+    }
+}
+
+// ConcreteProductB
+public class Bike : IVehicle
+{
+    public void Drive()
+    {
+        Console.WriteLine("Riding a bike.");
+    }
+}
+
+// Creator
+public abstract class VehicleFactory
+{
+    public abstract IVehicle CreateVehicle();
+}
+
+// ConcreteCreatorA
+public class CarFactory : VehicleFactory
+{
+    public override IVehicle CreateVehicle()
+    {
+        return new Car();
+    }
+}
+
+// ConcreteCreatorB
+public class BikeFactory : VehicleFactory
+{
+    public override IVehicle CreateVehicle()
+    {
+        return new Bike();
+    }
+}
+
+// Client
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        VehicleFactory factory;
+        IVehicle vehicle;
+
+        // Create a Car
+        factory = new CarFactory();
+        vehicle = factory.CreateVehicle();
+        vehicle.Drive();
+
+        // Create a Bike
+        factory = new BikeFactory();
+        vehicle = factory.CreateVehicle();
+        vehicle.Drive();
+    }
+}
