@@ -1,0 +1,78 @@
+using System;
+
+// Component
+public abstract class TextComponent
+{
+    public abstract string GetText();
+}
+
+// ConcreteComponent
+public class PlainText : TextComponent
+{
+    private string _text;
+
+    public PlainText(string text)
+    {
+        _text = text;
+    }
+
+    public override string GetText()
+    {
+        return _text;
+    }
+}
+
+// Decorator
+public abstract class TextDecorator : TextComponent
+{
+    protected TextComponent _textComponent;
+
+    public TextDecorator(TextComponent textComponent)
+    {
+        _textComponent = textComponent;
+    }
+
+    public override string GetText()
+    {
+        return _textComponent.GetText();
+    }
+}
+
+// ConcreteDecoratorA
+public class BoldText : TextDecorator
+{
+    public BoldText(TextComponent textComponent) : base(textComponent)
+    {
+    }
+
+    public override string GetText()
+    {
+        return "<b>" + base.GetText() + "</b>";
+    }
+}
+
+// ConcreteDecoratorB
+public class ItalicText : TextDecorator
+{
+    public ItalicText(TextComponent textComponent) : base(textComponent)
+    {
+    }
+
+    public override string GetText()
+    {
+        return "<i>" + base.GetText() + "</i>";
+    }
+}
+
+// Client
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        TextComponent plainText = new PlainText("Hello, World!");
+        TextComponent boldText = new BoldText(plainText);
+        TextComponent italicText = new ItalicText(boldText);
+
+        Console.WriteLine(italicText.GetText());
+    }
+}
