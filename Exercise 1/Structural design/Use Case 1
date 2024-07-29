@@ -1,0 +1,46 @@
+using System;
+
+// Legacy System (Adaptee)
+public class CelsiusThermometer
+{
+    public double GetTemperatureInCelsius()
+    {
+        // Simulating temperature reading in Celsius
+        return 25.0;
+    }
+}
+
+// Target Interface
+public interface IFahrenheitThermometer
+{
+    double GetTemperature();
+}
+
+// Adapter
+public class FahrenheitThermometerAdapter : IFahrenheitThermometer
+{
+    private CelsiusThermometer _celsiusThermometer;
+
+    public FahrenheitThermometerAdapter(CelsiusThermometer celsiusThermometer)
+    {
+        _celsiusThermometer = celsiusThermometer;
+    }
+
+    public double GetTemperature()
+    {
+        // Convert Celsius to Fahrenheit
+        return _celsiusThermometer.GetTemperatureInCelsius() * 9.0 / 5.0 + 32.0;
+    }
+}
+
+// Client
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        CelsiusThermometer celsiusThermometer = new CelsiusThermometer();
+        IFahrenheitThermometer fahrenheitThermometer = new FahrenheitThermometerAdapter(celsiusThermometer);
+
+        Console.WriteLine($"Temperature in Fahrenheit: {fahrenheitThermometer.GetTemperature()}");
+    }
+}
