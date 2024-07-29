@@ -1,0 +1,72 @@
+using System;
+
+// Strategy
+public interface IPaymentStrategy
+{
+    void Pay(decimal amount);
+}
+
+// ConcreteStrategyA
+public class CreditCardPayment : IPaymentStrategy
+{
+    private string cardNumber;
+
+    public CreditCardPayment(string cardNumber)
+    {
+        this.cardNumber = cardNumber;
+    }
+
+    public void Pay(decimal amount)
+    {
+        Console.WriteLine($"Paid {amount:C} using Credit Card: {cardNumber}");
+    }
+}
+
+// ConcreteStrategyB
+public class PayPalPayment : IPaymentStrategy
+{
+    private string email;
+
+    public PayPalPayment(string email)
+    {
+        this.email = email;
+    }
+
+    public void Pay(decimal amount)
+    {
+        Console.WriteLine($"Paid {amount:C} using PayPal: {email}");
+    }
+}
+
+// Context
+public class ShoppingCart
+{
+    private IPaymentStrategy paymentStrategy;
+
+    public void SetPaymentMethod(IPaymentStrategy paymentStrategy)
+    {
+        this.paymentStrategy = paymentStrategy;
+    }
+
+    public void Checkout(decimal amount)
+    {
+        paymentStrategy.Pay(amount);
+    }
+}
+
+// Client
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        ShoppingCart cart = new ShoppingCart();
+
+        // Pay using Credit Card
+        cart.SetPaymentMethod(new CreditCardPayment("1234-5678-9876-5432"));
+        cart.Checkout(100.00m);
+
+        // Pay using PayPal
+        cart.SetPaymentMethod(new PayPalPayment("user@example.com"));
+        cart.Checkout(50.00m);
+    }
+}
